@@ -150,7 +150,7 @@ func readLines(path string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func GetFeedList() ([]string, error) {
+func GetFeedList() ([]string, string, error) {
 
 	usr, _ := user.Current()
 	path, _ := os.Getwd()
@@ -159,13 +159,13 @@ func GetFeedList() ([]string, error) {
 
 	lines, err := readLines(feed_path)
 
-	return lines, err
+	return lines, feed_path, err
 
 }
 
 func main() {
 
-	feed_list, _ := GetFeedList()
+	feed_list, feed_path, _ := GetFeedList()
 
 	for _, feed_url := range feed_list {
 
