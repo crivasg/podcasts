@@ -150,6 +150,21 @@ func readLines(path string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
+// writeLines writes the lines to the given file.
+func writeLines(lines []string, path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	w := bufio.NewWriter(file)
+	for _, line := range lines {
+		fmt.Fprintln(w, line)
+	}
+	return w.Flush()
+}
+
 func GetFeedList() ([]string, string, error) {
 
 	usr, _ := user.Current()
@@ -166,6 +181,7 @@ func GetFeedList() ([]string, string, error) {
 func main() {
 
 	feed_list, feed_path, _ := GetFeedList()
+	fmt.Println(feed_path)
 
 	for _, feed_url := range feed_list {
 
