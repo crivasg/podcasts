@@ -44,7 +44,7 @@ func (c Channel) String() string {
 	doc.ToText(&buf, strings.TrimSpace(desc), "# ", "", PARAGRAPH_WIDTH)
 	//fmt.Println(buf.String())
 
-	return fmt.Sprintf("##\n# %s\n# %s\n# %s\n##", c.Title, c.Link, buf.String())
+	return fmt.Sprintf("##\n# %s\n# %s\n%s\n##", c.Title, c.Link, buf.String())
 }
 
 type Item struct {
