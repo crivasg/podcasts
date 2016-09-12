@@ -181,6 +181,11 @@ func GetFeedList() ([]string, string, error) {
 	directories := strings.Split(path, "/")
 	feed_path := filepath.Join(usr.HomeDir, "."+directories[len(directories)-1], "feeds.txt")
 
+	if _, err := os.Stat(feed_path); os.IsNotExist(err) {
+		// http://stackoverflow.com/a/12518877
+		GenerateFeedListFile(feed_path)
+	}
+
 	lines, err := readLines(feed_path)
 
 	return lines, feed_path, err
