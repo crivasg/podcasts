@@ -165,6 +165,15 @@ func writeLines(lines []string, path string) error {
 	return w.Flush()
 }
 
+func GenerateFeedListFile(path string) error {
+	s := make([]string, 2)
+	s[0] = "http://feeds.5by5.tv/master"
+	s[1] = "http://feed.thisamericanlife.org/talpodcast"
+
+	err1 := writeLines(s, path)
+	return err1
+}
+
 func GetFeedList() ([]string, string, error) {
 
 	usr, _ := user.Current()
