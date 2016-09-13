@@ -243,11 +243,20 @@ func main() {
 
 		for _, item := range channel.Items {
 			fmt.Println(item)
+			parsed, t1_err := ParseTime(item.PubDate)
+			if t1_err != nil {
+				continue
+			}
+
+			fmt.Println("--- ", parsed.String())
+			fmt.Println("--- ", parsed.Location())
+
 			for _, encl := range item.Enclosures {
 
 				filename, err := GetFileName(encl.String())
 				if err != nil {
 					filename = ""
+					continue
 				}
 				fmt.Println("wget -O " + filename + " " + encl.String())
 				fmt.Println("#")
