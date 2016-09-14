@@ -230,9 +230,9 @@ func main() {
 
 	for _, feed_url := range feed_list {
 
-		t := time.Now()
-		fmt.Println(t.Format(time.RFC1123))
-		t = t.UTC()
+		now := time.Now()
+		fmt.Println(now.Format(time.RFC1123))
+		now = t.UTC()
 
 		channel, err := GetPodcastData(feed_url)
 
