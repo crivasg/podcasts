@@ -250,6 +250,8 @@ func main() {
 
 			fmt.Println("--- ", parsed.String())
 			fmt.Println("--- ", parsed.Location())
+			fmt.Println("--- ", parsed.UTC().String())
+			fmt.Println("--- ", parsed.UTC().Location())
 
 			for _, encl := range item.Enclosures {
 
