@@ -255,6 +255,7 @@ func main() {
 			fmt.Println("--- ", parsed.UTC().Location())
 
 			parsed = parsed.UTC()
+			diff := now.Sub(parsed)
 
 			for _, encl := range item.Enclosures {
 
