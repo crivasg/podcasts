@@ -240,7 +240,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Println(channel)
+		printed_channel := 0
 
 		for _, item := range channel.Items {
 
@@ -251,11 +251,14 @@ func main() {
 
 			parsed = parsed.UTC()
 			diff := now.Sub(parsed)
-			fmt.Println("--- ", parsed.String())
-			fmt.Println("--- ", diff.Hours(), 4.0*24.0)
 
 			if diff.Hours() > 4.0*24.0 {
 				break
+			}
+
+			if printed_channel == 0 {
+				fmt.Println(channel)
+				printed_channel = 1
 			}
 
 			fmt.Println(item)
