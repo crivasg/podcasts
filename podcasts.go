@@ -243,7 +243,7 @@ func main() {
 		fmt.Println(channel)
 
 		for _, item := range channel.Items {
-			fmt.Println(item)
+
 			parsed, t1_err := ParseTime(item.PubDate)
 			if t1_err != nil {
 				continue
@@ -252,7 +252,13 @@ func main() {
 			parsed = parsed.UTC()
 			diff := now.Sub(parsed)
 			fmt.Println("--- ", parsed.String())
-			fmt.Println("--- ", diff.String())
+			fmt.Println("--- ", diff.Hours(), 4.0*24.0)
+
+			if diff.Hours() > 4.0*24.0 {
+				break
+			}
+
+			fmt.Println(item)
 
 			for _, encl := range item.Enclosures {
 
