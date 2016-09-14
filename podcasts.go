@@ -232,7 +232,7 @@ func main() {
 
 		now := time.Now()
 		fmt.Println(now.Format(time.RFC1123))
-		now = t.UTC()
+		now = now.UTC()
 
 		channel, err := GetPodcastData(feed_url)
 
