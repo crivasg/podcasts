@@ -225,13 +225,14 @@ func ParseTime(formatted string) (time.Time, error) {
 
 func main() {
 
-	t := time.Now()
-	fmt.Println(t.Format(time.RFC1123))
-
 	feed_list, feed_path, _ := GetFeedList()
 	fmt.Println(feed_path)
 
 	for _, feed_url := range feed_list {
+
+		t := time.Now()
+		fmt.Println(t.Format(time.RFC1123))
+		t = t.UTC()
 
 		channel, err := GetPodcastData(feed_url)
 
@@ -252,6 +253,8 @@ func main() {
 			fmt.Println("--- ", parsed.Location())
 			fmt.Println("--- ", parsed.UTC().String())
 			fmt.Println("--- ", parsed.UTC().Location())
+
+			parsed = parsed.UTC()
 
 			for _, encl := range item.Enclosures {
 
