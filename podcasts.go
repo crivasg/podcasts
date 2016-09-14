@@ -249,13 +249,10 @@ func main() {
 				continue
 			}
 
-			fmt.Println("--- ", parsed.String())
-			fmt.Println("--- ", parsed.Location())
-			fmt.Println("--- ", parsed.UTC().String())
-			fmt.Println("--- ", parsed.UTC().Location())
-
 			parsed = parsed.UTC()
 			diff := now.Sub(parsed)
+			fmt.Println("--- ", parsed.String())
+			fmt.Println("--- ", diff.String())
 
 			for _, encl := range item.Enclosures {
 
