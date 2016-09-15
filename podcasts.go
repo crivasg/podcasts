@@ -254,12 +254,16 @@ func main() {
 				break
 			}
 
+			feed_array := []string{}
+
 			if printed_channel == 0 {
-				fmt.Println(channel)
+				//fmt.Println(channel)
+				feed_array = append(feed_array, channel.String())
 				printed_channel = 1
 			}
 
-			fmt.Println(item)
+			//fmt.Println(item)
+			feed_array = append(feed_array, item.String(), "#")
 
 			for _, encl := range item.Enclosures {
 
@@ -268,10 +272,12 @@ func main() {
 					filename = ""
 					continue
 				}
-				fmt.Println("wget -O " + filename + " " + encl.String())
-				fmt.Println("#")
+				//fmt.Println("wget -O " + filename + " " + encl.String())
+				//fmt.Println("#")
+				feed_array = append(feed_array, "wget -O "+filename+" "+encl.String(), "#")
 
 			}
+			fmt.Println(strings.Join(feed_array, "\n"))
 		}
 	}
 
