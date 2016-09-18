@@ -226,7 +226,6 @@ func ParseTime(formatted string) (time.Time, error) {
 func main() {
 
 	feed_list, feed_path, _ := GetFeedList()
-	fmt.Println(feed_path)
 
 	for _, feed_url := range feed_list {
 
