@@ -3,9 +3,11 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"crypto/sha1"
 	"encoding/xml"
 	"fmt"
 	"go/doc"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
