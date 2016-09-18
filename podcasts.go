@@ -225,7 +225,7 @@ func ParseTime(formatted string) (time.Time, error) {
 	return t, err
 }
 
-func fetch(url string, ch chan<- string) {
+func podcast_fetch(url string, ch chan<- string) {
 
 	start := time.Now()
 
@@ -271,7 +271,7 @@ func main() {
 	fmt.Printf("%10s : %10s : %50s : %s\n", "secs", "nbytes", "sha1", "URL")
 
 	for _, url := range feed_list {
-		go fetch(url, ch) // start a goroutine
+		go podcast_fetch(url, ch) // start a goroutine
 	}
 
 	for range feed_list {
