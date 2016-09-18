@@ -225,12 +225,63 @@ func ParseTime(formatted string) (time.Time, error) {
 	return t, err
 }
 
+func fetch(url string, ch chan<- string) {
+
+	start := time.Now()
+
+	resp, err := http.Get(url)
+	if err != nil {
+		ch <- fmt.Sprint(err) // send to channel ch
+		return
+	}
+
+	h := sha1.New()
+	h.Write([]byte(url))
+	bs := h.Sum(nil)
+	filename := fmt.Sprintf("%x", bs)
+	filepath := filepath.Join("/tmp", filename)
+
+	w, err := os.Create(filepath)
+	if err != nil {
+		ch <- fmt.Sprintf("couldn't create %s: %v\n", filepath, err)
+		return
+	}
+
+	nbytes, err := io.Copy(w, resp.Body)
+	resp.Body.Close() // don't leak resources
+	w.Close()
+
+	if err != nil {
+		ch <- fmt.Sprintf("while reading %s: %v\n", url, err)
+		return
+	}
+
+	secs := time.Since(start).Seconds()
+
+	ch <- fmt.Sprintf("%9.2fs : %-10d : %50x : %s", secs, nbytes, bs, url)
+
+}
+
 func main() {
 
-	feed_list, feed_path, _ := GetFeedList()
+	feed_list, _, _ := GetFeedList()
+
+	start := time.Now()
+	ch := make(chan string)
+	fmt.Printf("%10s : %10s : %50s : %s\n", "secs", "nbytes", "sha1", "URL")
+
+	for _, url := range feed_list {
+		go fetch(url, ch) // start a goroutine
+	}
+
+	for range feed_list {
+		fmt.Println(<-ch)
+	}
+
+	fmt.Printf("%6.2fs elapsed\n", time.Since(start).Seconds())
 
 	for _, feed_url := range feed_list {
-
+		break
 		now := time.Now().UTC()
 
 		channel, err := GetPodcastData(feed_url)
