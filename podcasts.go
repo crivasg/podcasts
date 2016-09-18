@@ -225,7 +225,7 @@ func ParseTime(formatted string) (time.Time, error) {
 	return t, err
 }
 
-func podcast_fetch(url string, ch chan<- string) {
+func podcast_fetch(url string, dirname string, ch chan<- string) {
 
 	start := time.Now()
 
@@ -239,7 +239,7 @@ func podcast_fetch(url string, ch chan<- string) {
 	h.Write([]byte(url))
 	bs := h.Sum(nil)
 	filename := fmt.Sprintf("%x", bs)
-	filepath := filepath.Join("/tmp", filename)
+	filepath := filepath.Join(dirname, filename)
 
 	w, err := os.Create(filepath)
 	if err != nil {
@@ -264,14 +264,15 @@ func podcast_fetch(url string, ch chan<- string) {
 
 func main() {
 
-	feed_list, _, _ := GetFeedList()
+	feed_list, feed_path, _ := GetFeedList()
+	feed_data_folder := filepath.Dir(feed_path)
 
 	start := time.Now()
 	ch := make(chan string)
 	fmt.Printf("%10s : %10s : %50s : %s\n", "secs", "nbytes", "sha1", "URL")
 
 	for _, url := range feed_list {
-		go podcast_fetch(url, ch) // start a goroutine
+		go podcast_fetch(url, feed_data_folder, ch) // start a goroutine
 	}
 
 	for range feed_list {
