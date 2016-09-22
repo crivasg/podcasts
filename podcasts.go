@@ -238,7 +238,7 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 		return
 	}
 
-	feed_array := []string{}
+	feed_array := []string{"## ----------------- feed file -----------------"}
 	for _, item := range channel.Items {
 
 		parsed, t1_err := ParseTime(item.PubDate)
@@ -300,7 +300,7 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 	}
 
 	secs := time.Since(start).Seconds()
-	ch <- fmt.Sprintf("%9.2fs : %-10d : %50x : %s", secs, nbytes, bs, url)
+	ch <- fmt.Sprintf("%9.2fs : %-10d : %40x : %s", secs, nbytes, bs, url)
 
 }
 
@@ -329,7 +329,7 @@ func main() {
 
 	start := time.Now()
 	ch := make(chan string)
-	fmt.Printf("%10s : %10s : %50s : %s\n", "secs", "nbytes", "sha1", "URL")
+	fmt.Printf("%10s : %10s : %40s : %s\n", "secs", "nbytes", "sha1", "URL")
 
 	for _, url := range feed_list {
 		go podcast_fetch(url, feed_data_folder, ch) // start a goroutine
