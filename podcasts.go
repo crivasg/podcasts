@@ -262,10 +262,26 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 
 }
 
+func deleteFiles(path string, f os.FileInfo, err error) error {
+	if filepath.Ext(path) == ".feed" {
+		fmt.Printf("%s\n", path)
+	}
+	return nil
+}
+
 func main() {
 
 	feed_list, feed_path, _ := GetFeedList()
 	feed_data_folder := filepath.Dir(feed_path)
+
+	// delete the .feed files if they exist
+	//feedExtensions := []string{".feed"}
+	err_walker := filepath.Walk(feed_data_folder, deleteFiles)
+	if err_walker != nil {
+		log.Fatal(err_walker)
+	}
+
+	return
 
 	start := time.Now()
 	ch := make(chan string)
