@@ -238,7 +238,7 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 	h := sha1.New()
 	h.Write([]byte(url))
 	bs := h.Sum(nil)
-	filename := fmt.Sprintf("%x", bs)
+	filename := fmt.Sprintf("%x.feed", bs)
 	filepath := filepath.Join(dirname, filename)
 
 	w, err := os.Create(filepath)
