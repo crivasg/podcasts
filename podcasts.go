@@ -265,6 +265,10 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 func deleteFiles(path string, f os.FileInfo, err error) error {
 	if filepath.Ext(path) == ".feed" {
 		fmt.Printf("%s\n", path)
+		err_os := os.Remove(path)
+		if err_os != nil {
+			return err_os
+		}
 	}
 	return nil
 }
