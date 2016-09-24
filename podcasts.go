@@ -240,7 +240,7 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 		return
 	}
 
-	feed_array := []string{"## ----------------- feed file -----------------"}
+	feed_array := []string{"## ----------------- feed file -----------------", "## " + url}
 	for _, item := range channel.Items {
 
 		parsed, t1_err := ParseTime(item.PubDate)
@@ -278,6 +278,8 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 		}
 
 	}
+
+	feed_array = append(feed_array, "#\n")
 
 	h := sha1.New()
 	h.Write([]byte(url))
