@@ -179,9 +179,11 @@ func GenerateFeedListFile(path string) error {
 func GetFeedList() ([]string, string, error) {
 
 	usr, _ := user.Current()
-	path, _ := os.Getwd()
-	directories := strings.Split(path, "/")
-	feed_path := filepath.Join(usr.HomeDir, "."+directories[len(directories)-1], "feeds.txt")
+	//path, _ := os.Getwd()
+	//directories := strings.Split(path, "/")
+	feed_path := filepath.Join(usr.HomeDir, ".podcasts", "feeds.txt")
+	//fmt.Println(path)
+	//fmt.Println(feed_path)
 
 	if _, err := os.Stat(feed_path); os.IsNotExist(err) {
 		// http://stackoverflow.com/a/12518877
