@@ -138,6 +138,10 @@ func GetPodcastData(feed_url string) (Channel, error) {
 // readLines reads a whole file into memory
 // and returns a slice of its lines.
 func readLines(path string) ([]string, error) {
+
+	comment_prefix := "#"
+	curr_line := ""
+
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -147,7 +151,10 @@ func readLines(path string) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
+		curr_line = scanner.Text()
+		if comment_prefix != string(curr_line[0]) {
+			lines = append(lines, curr_line)
+		}
 	}
 	return lines, scanner.Err()
 }
