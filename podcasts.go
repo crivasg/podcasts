@@ -314,7 +314,7 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 	}
 
 	secs := time.Since(start).Seconds()
-	ch <- fmt.Sprintf("%9.2fs : %-10d : %40x : %-40s : %s", secs, nbytes, bs, channel.Title, url)
+	ch <- fmt.Sprintf("%9.2fs : %-8d : %10x : %-25s : %s", secs, nbytes, bs[0:10], channel.Title, url)
 
 }
 
@@ -343,7 +343,7 @@ func main() {
 
 	start := time.Now()
 	ch := make(chan string)
-	fmt.Printf("%10s : %10s : %40s : %-40s : %s\n", "secs", "nbytes", "sha1", "Title", "URL")
+	fmt.Printf("%10s : %8s : %20s : %-25s : %s\n", "secs", "nbytes", "sha1", "Title", "URL")
 
 	for _, url := range feed_list {
 		go podcast_fetch(url, feed_data_folder, ch) // start a goroutine
