@@ -151,7 +151,10 @@ func readLines(path string) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		curr_line = scanner.Text()
+		curr_line = strings.Trim(scanner.Text(), "\t ")
+		if len(curr_line) == 0 {
+			continue
+		}
 		if comment_prefix != string(curr_line[0]) {
 			lines = append(lines, curr_line)
 		}
