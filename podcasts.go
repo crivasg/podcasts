@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -139,9 +140,6 @@ func GetPodcastData(feed_url string) (Channel, error) {
 // and returns a slice of its lines.
 func readLines(path string) ([]string, error) {
 
-	comment_prefix := "#"
-	curr_line := ""
-
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -151,11 +149,9 @@ func readLines(path string) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		curr_line = strings.Trim(scanner.Text(), "\t ")
-		if len(curr_line) == 0 {
-			continue
-		}
-		if comment_prefix != string(curr_line[0]) {
+		curr_line := strings.Trim(scanner.Text(), "\t ")
+		match, _ := regexp.MatchString("^htt(p|ps)://", curr_line)
+		if match == true {
 			lines = append(lines, curr_line)
 		}
 	}
