@@ -325,6 +325,25 @@ func deleteFiles(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+func mergeFiles(folder string, extension string) {
+
+	// https://golang.org/pkg/io/ioutil/#ReadAll
+	files, err := ioutil.ReadDir(folder)
+	if err != nil {
+		return
+	}
+	feed_files := []string{}
+	for _, file := range files {
+		match, _ := regexp.MatchString(".feed$", file.Name())
+		if match == true {
+			feed_files = append(feed_files, file.Name())
+		}
+	}
+
+	fmt.Printf(strings.Join(feed_files, "\n"))
+
+}
+
 func main() {
 
 	feed_list, feed_path, _ := GetFeedList()
@@ -350,6 +369,8 @@ func main() {
 	}
 
 	fmt.Printf("%6.2fs elapsed\n", time.Since(start).Seconds())
+
+	mergeFiles(feed_data_folder, ".feed")
 
 }
 
