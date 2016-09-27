@@ -325,12 +325,12 @@ func deleteFiles(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
-func mergeFiles(folder string, extension string) {
-    
+func mergeDataOfFiles(folder string, extension string) string {
+
 	// https://golang.org/pkg/io/ioutil/#ReadAll
 	files, err := ioutil.ReadDir(folder)
 	if err != nil {
-		return
+		return ""
 	}
 	//feed_files := []string{}
 	feed_text := "# ---"
@@ -338,8 +338,8 @@ func mergeFiles(folder string, extension string) {
 		match, _ := regexp.MatchString(".feed$", file.Name())
 		if match == true {
 
-            //http://stackoverflow.com/questions/36111777/golang-how-to-read-a-text-file
-            //http://stackoverflow.com/questions/13078314/combine-absolute-path-and-relative-path-to-get-a-new-absolute-path
+			//http://stackoverflow.com/questions/36111777/golang-how-to-read-a-text-file
+			//http://stackoverflow.com/questions/13078314/combine-absolute-path-and-relative-path-to-get-a-new-absolute-path
 			b, err := ioutil.ReadFile(filepath.Join(folder, file.Name())) // just pass the file name
 			if err != nil {
 				fmt.Print(err)
@@ -351,7 +351,7 @@ func mergeFiles(folder string, extension string) {
 		}
 	}
 
-	fmt.Printf(feed_text + "\n")
+	return feed_text
 
 }
 
@@ -379,9 +379,10 @@ func main() {
 		fmt.Println(<-ch)
 	}
 
-	fmt.Printf("%6.2fs elapsed\n", time.Since(start).Seconds())
+	fmt.Printf("\n%6.2fs elapsed\n\n", time.Since(start).Seconds())
 
-	mergeFiles(feed_data_folder, ".feed")
+	feed_text := mergeDataOfFiles(feed_data_folder, ".feed")
+	fmt.Printf(feed_text)
 
 }
 
