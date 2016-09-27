@@ -332,15 +332,24 @@ func mergeFiles(folder string, extension string) {
 	if err != nil {
 		return
 	}
-	feed_files := []string{}
+	//feed_files := []string{}
+	feed_text := "# ---"
 	for _, file := range files {
 		match, _ := regexp.MatchString(".feed$", file.Name())
 		if match == true {
-			feed_files = append(feed_files, file.Name())
+
+			b, err := ioutil.ReadFile(filepath.Join(folder, file.Name())) // just pass the file name
+			if err != nil {
+				fmt.Print(err)
+				continue
+			}
+			feed_text += string(b) + "\n"
+
+			//feed_files = append(feed_files, file.Name())
 		}
 	}
 
-	fmt.Printf(strings.Join(feed_files, "\n"))
+	fmt.Printf(feed_text + "\n")
 
 }
 
