@@ -326,7 +326,7 @@ func deleteFiles(path string, f os.FileInfo, err error) error {
 }
 
 func mergeFiles(folder string, extension string) {
-
+    
 	// https://golang.org/pkg/io/ioutil/#ReadAll
 	files, err := ioutil.ReadDir(folder)
 	if err != nil {
@@ -338,6 +338,8 @@ func mergeFiles(folder string, extension string) {
 		match, _ := regexp.MatchString(".feed$", file.Name())
 		if match == true {
 
+            //http://stackoverflow.com/questions/36111777/golang-how-to-read-a-text-file
+            //http://stackoverflow.com/questions/13078314/combine-absolute-path-and-relative-path-to-get-a-new-absolute-path
 			b, err := ioutil.ReadFile(filepath.Join(folder, file.Name())) // just pass the file name
 			if err != nil {
 				fmt.Print(err)
