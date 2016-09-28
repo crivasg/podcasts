@@ -232,7 +232,7 @@ func ParseTime(formatted string) (time.Time, error) {
 	return t, err
 }
 
-func podcast_fetch(url string, dirname string, ch chan<- string) {
+func podcast_fetch(url string, dirname string, days uint, ch chan<- string) {
 
 	start := time.Now()
 
@@ -257,7 +257,7 @@ func podcast_fetch(url string, dirname string, ch chan<- string) {
 		parsed = parsed.UTC()
 		diff := now.Sub(parsed)
 
-		if diff.Hours() > 4.0*24.0 {
+		if diff.Hours() > float64(days)*24.0 {
 			break
 		}
 
@@ -359,6 +359,8 @@ func main() {
 
 	feed_list, feed_path, _ := GetFeedList()
 	feed_data_folder := filepath.Dir(feed_path)
+	var days uint
+	days = 4
 
 	// delete the .feed files if they exist
 	//feedExtensions := []string{".feed"}
@@ -372,7 +374,7 @@ func main() {
 	fmt.Printf("%10s : %8s : %20s : %-25s : %s\n", "secs", "nbytes", "sha1", "Title", "URL")
 
 	for _, url := range feed_list {
-		go podcast_fetch(url, feed_data_folder, ch) // start a goroutine
+		go podcast_fetch(url, feed_data_folder, days, ch) // start a goroutine
 	}
 
 	for range feed_list {
