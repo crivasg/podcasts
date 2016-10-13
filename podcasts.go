@@ -248,6 +248,7 @@ func podcast_fetch(url string, dirname string, days uint, ch chan<- string) {
 	}
 
 	feed_array := []string{"## ----------------- feed file -----------------", "## " + channel.Title, "## URL: " + channel.Link}
+	feed_array = append(feed_array, "# "+channel.LastBuildDate)
 	for _, item := range channel.Items {
 
 		parsed, t1_err := ParseTime(item.PubDate)
