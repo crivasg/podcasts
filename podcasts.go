@@ -360,7 +360,7 @@ func main() {
 	feed_list, feed_path, _ := GetFeedList()
 	feed_data_folder := filepath.Dir(feed_path)
 	var days uint
-	days = 4
+	days = 10
 
 	// delete the .feed files if they exist
 	//feedExtensions := []string{".feed"}
