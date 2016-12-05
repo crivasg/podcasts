@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"encoding/xml"
+	"flag"
 	"fmt"
 	"go/doc"
 	"io/ioutil"
@@ -18,6 +19,8 @@ import (
 	"strings"
 	"time"
 )
+
+var numOfDays = flag.Int("days", 1, "Number of days back to download an episode")
 
 const (
 	rssXmlns        = "http://www.itunes.com/dtds/podcast-1.0.dtd"
@@ -233,7 +236,7 @@ func ParseTime(formatted string) (time.Time, error) {
 	return t, err
 }
 
-func podcast_fetch(url string, dirname string, days uint, ch chan<- string) {
+func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 
 	start := time.Now()
 
@@ -359,10 +362,10 @@ func mergeDataOfFiles(folder string, extension string) string {
 
 func main() {
 
+	flag.Parse()
+
 	feed_list, feed_path, _ := GetFeedList()
 	feed_data_folder := filepath.Dir(feed_path)
-	var days uint
-	days = 10
 
 	// delete the .feed files if they exist
 	//feedExtensions := []string{".feed"}
@@ -376,7 +379,7 @@ func main() {
 	fmt.Printf("%10s : %8s : %20s : %-25s : %s\n", "secs", "nbytes", "sha1", "Title", "URL")
 
 	for _, url := range feed_list {
-		go podcast_fetch(url, feed_data_folder, days, ch) // start a goroutine
+		go podcast_fetch(url, feed_data_folder, *numOfDays, ch) // start a goroutine
 	}
 
 	for range feed_list {
