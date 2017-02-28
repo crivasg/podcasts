@@ -21,6 +21,7 @@ import (
 )
 
 var numOfDays = flag.Int("days", 1, "Number of days back to download an episode")
+var outputFile = flag.String("output", ``, "Path of the output file")
 
 const (
 	rssXmlns        = "http://www.itunes.com/dtds/podcast-1.0.dtd"
@@ -160,6 +161,19 @@ func readLines(path string) ([]string, error) {
 		}
 	}
 	return lines, scanner.Err()
+}
+
+// writetext writes the lines to the given file.
+func writeText(text string, path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	w := bufio.NewWriter(file)
+	fmt.Fprintln(w, text)
+	return w.Flush()
 }
 
 // writeLines writes the lines to the given file.
@@ -389,7 +403,12 @@ func main() {
 	fmt.Printf("\n%6.2fs elapsed\n\n", time.Since(start).Seconds())
 
 	feed_text := mergeDataOfFiles(feed_data_folder, ".feed")
-	fmt.Printf(feed_text)
+
+	if len(*outputFile) == 0 {
+		fmt.Printf(feed_text)
+	} else {
+		writeText(feed_text, *outputFile)
+	}
 
 	// delete the .feed files if they exist
 	//feedExtensions := []string{".feed"}
