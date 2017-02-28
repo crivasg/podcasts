@@ -73,7 +73,7 @@ func (i Item) String() string {
 	doc.ToText(&buf, desc, "# ", "", PARAGRAPH_WIDTH)
 
 	desc = buf.String()
-	return fmt.Sprintf("# Title: %s\n# PubDate: %s\n# GUID: %s\n#%s", strings.TrimSpace(i.Title),
+	return fmt.Sprintf("# Title: %s\n# PubDate: %s\n# GUID: %s\n%s", strings.TrimSpace(i.Title),
 		i.PubDate, strings.TrimSpace(i.Guid), strings.TrimSpace(desc))
 }
 
@@ -256,9 +256,7 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 
 	now := time.Now().UTC()
 	channel, err := GetPodcastData(url)
-	printed_channel := 0
 
-	//resp, err := http.Get(url)
 	if err != nil {
 		ch <- fmt.Sprint(err) // send to channel ch
 		return
@@ -280,14 +278,7 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 			break
 		}
 
-		if printed_channel == 0 {
-			//fmt.Println(channel)
-			feed_array = append(feed_array, channel.String())
-			printed_channel = 1
-		}
-
-		//fmt.Println(item)
-		feed_array = append(feed_array, item.String(), "#")
+		feed_array = append(feed_array, "#", item.String(), "#")
 
 		for _, encl := range item.Enclosures {
 
