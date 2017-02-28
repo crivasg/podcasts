@@ -391,6 +391,14 @@ func main() {
 	feed_text := mergeDataOfFiles(feed_data_folder, ".feed")
 	fmt.Printf(feed_text)
 
+	// delete the .feed files if they exist
+	//feedExtensions := []string{".feed"}
+	// clean up before finishing...
+	err_walker = filepath.Walk(feed_data_folder, deleteFiles)
+	if err_walker != nil {
+		log.Fatal(err_walker)
+	}
+
 }
 
 // http://siongui.github.io/2015/03/03/go-parse-web-feed-rss-atom/
