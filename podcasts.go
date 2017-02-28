@@ -264,8 +264,8 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 		return
 	}
 
-	feed_array := []string{"## ----------------- feed file -----------------", "## " + channel.Title, "## URL: " + channel.Link}
-	feed_array = append(feed_array, "# "+channel.LastBuildDate)
+	feed_array := []string{"## " + channel.Title, "## URL: " + channel.Link,
+		"## " + channel.LastBuildDate}
 	for _, item := range channel.Items {
 
 		parsed, t1_err := ParseTime(item.PubDate)
@@ -352,7 +352,7 @@ func mergeDataOfFiles(folder string, extension string) string {
 		return ""
 	}
 	//feed_files := []string{}
-	feed_text := "# ---"
+	feed_text := "#\n# --------------------------------------- PODCASTS ---------------------------------------\n#\n"
 	for _, file := range files {
 		match, _ := regexp.MatchString(".feed$", file.Name())
 		if match == true {
@@ -364,9 +364,12 @@ func mergeDataOfFiles(folder string, extension string) string {
 				fmt.Print(err)
 				continue
 			}
-			feed_text += string(b) + "\n"
 
-			//feed_files = append(feed_files, file.Name())
+			match, _ := regexp.MatchString("wget\\s-O", string(b))
+
+			if match == true {
+				feed_text += string(b) + "\n"
+			}
 		}
 	}
 
