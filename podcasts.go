@@ -26,7 +26,9 @@ var outputFile = flag.String("output", ``, "Path of the output file")
 const (
 	rssXmlns        = "http://www.itunes.com/dtds/podcast-1.0.dtd"
 	rssVersion      = "2.0"
-	PARAGRAPH_WIDTH = 82
+	PARAGRAPH_WIDTH = 90
+	PODCAST_HEADER  = "PODCASTS"
+	WIDTH_HEADER    = 120
 )
 
 type Rss2 struct {
@@ -320,7 +322,17 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 	}
 
 	secs := time.Since(start).Seconds()
-	ch <- fmt.Sprintf("%9.2fs : %-8d : %10x : %-25s : %s", secs, nbytes, bs[0:10], channel.Title, url)
+	channel_title := channel.Title
+	if len(channel_title) > 25 {
+		channel_title = channel_title[:25]
+	}
+
+	url_str := url
+	if len(url_str) > 50 {
+		url_str = url_str[:50]
+	}
+
+	ch <- fmt.Sprintf("%5.2fs : %-6d : %10x : %-25s : %s", secs, nbytes, bs[0:10], channel_title, url_str)
 
 }
 
@@ -335,6 +347,22 @@ func deleteFiles(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+func constructPodcastHeader(line_width int) string {
+	/*
+	   construct the podcast header using string.Repeat(char,int)
+	*/
+
+	count := line_width - len(PODCAST_HEADER) - 4
+	if count%2 == 0 {
+		count = count / 2
+	} else {
+		count = (count + 1) / 2
+	}
+
+	return fmt.Sprintf("# %s %s %s", strings.Repeat("-", count), PODCAST_HEADER, strings.Repeat("-", count))
+
+}
+
 func mergeDataOfFiles(folder string, extension string) string {
 
 	// https://golang.org/pkg/io/ioutil/#ReadAll
@@ -343,7 +371,7 @@ func mergeDataOfFiles(folder string, extension string) string {
 		return ""
 	}
 	//feed_files := []string{}
-	feed_text := "#\n# --------------------------------------- PODCASTS ---------------------------------------\n#\n"
+	feed_text := constructPodcastHeader(PARAGRAPH_WIDTH) + "\n#\n"
 	for _, file := range files {
 		match, _ := regexp.MatchString(".feed$", file.Name())
 		if match == true {
@@ -382,9 +410,14 @@ func main() {
 		log.Fatal(err_walker)
 	}
 
+	fmt.Printf("%s\n", constructPodcastHeader(WIDTH_HEADER))
+
+	// 1234567890
+	//       secs : nbytes :                 sha1 : Title                     : URL
+
 	start := time.Now()
 	ch := make(chan string)
-	fmt.Printf("%10s : %8s : %20s : %-25s : %s\n", "secs", "nbytes", "sha1", "Title", "URL")
+	fmt.Printf("%6s : %6s : %20s : %-25s : %s\n", "secs", "nbytes", "sha1", "Title", "URL")
 
 	for _, url := range feed_list {
 		go podcast_fetch(url, feed_data_folder, *numOfDays, ch) // start a goroutine
@@ -394,7 +427,7 @@ func main() {
 		fmt.Println(<-ch)
 	}
 
-	fmt.Printf("\n%6.2fs elapsed\n\n", time.Since(start).Seconds())
+	fmt.Printf("\n%5.2fs elapsed\n\n", time.Since(start).Seconds())
 
 	feed_text := mergeDataOfFiles(feed_data_folder, ".feed")
 
