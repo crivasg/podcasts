@@ -273,6 +273,10 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 			continue
 		}
 
+		if len(item.Enclosures) == 0 {
+			continue
+		}
+
 		parsed = parsed.UTC()
 		diff := now.Sub(parsed)
 
@@ -281,11 +285,6 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 		}
 
 		feed_array = append(feed_array, "#", item.String(), "#")
-
-		if len(item.Enclosures) == 0 {
-			continue
-		}
-
 		for _, encl := range item.Enclosures {
 
 			filename, err := GetFileName(encl.String())
