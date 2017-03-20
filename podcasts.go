@@ -294,7 +294,7 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 			}
 			//fmt.Println("wget -O " + filename + " " + encl.String())
 			//fmt.Println("#")
-			feed_array = append(feed_array, "wget -O "+filename+" "+encl.String(), "#")
+			feed_array = append(feed_array, "wget --no-clobber -O "+filename+" "+encl.String(), "#")
 
 		}
 
@@ -387,7 +387,7 @@ func mergeDataOfFiles(folder string, extension string) string {
 				continue
 			}
 
-			match, _ := regexp.MatchString("wget\\s-O", string(b))
+			match, _ := regexp.MatchString("wget\\s--no-clobber", string(b))
 
 			if match == true {
 				feed_text += string(b) + "\n"
