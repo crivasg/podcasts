@@ -12,14 +12,10 @@ func addUrl(feedUrl string) error {
 
 	fmt.Fprintf(os.Stdout, "podcasts: %s\n\n", feedUrl)
 
-	res, err := http.Get(feedUrl)
+	_, err := http.Get(feedUrl)
 	if err != nil {
 		return err
 	}
-
-	// http://stackoverflow.com/a/16785343
-	finalURL := res.Request.URL.String()
-	fmt.Fprintf(os.Stdout, "podcasts: %s\n\n", finalURL)
 
 	// get the podcast list file
 	usr, _ := user.Current()
