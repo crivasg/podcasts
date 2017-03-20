@@ -34,5 +34,10 @@ func addUrl(feedUrl string) error {
 		return nil
 	}
 
+	err = appendText("\n"+feedUrl, feedPath)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

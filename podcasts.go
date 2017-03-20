@@ -166,6 +166,23 @@ func readLines(path string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
+func appendText(text string, path string) error {
+
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	if _, err = f.WriteString(text); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 // writetext writes the lines to the given file.
 func writeText(text string, path string) error {
 	file, err := os.Create(path)
