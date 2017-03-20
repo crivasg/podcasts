@@ -22,6 +22,7 @@ import (
 
 var numOfDays = flag.Int("days", 1, "Number of days back to download an episode")
 var outputFile = flag.String("output", ``, "Path of the output file")
+var new_feed_url = flag.String("add", ``, "Add feed url to the list of podcasts")
 
 const (
 	rssXmlns        = "http://www.itunes.com/dtds/podcast-1.0.dtd"
