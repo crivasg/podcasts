@@ -404,6 +404,17 @@ func main() {
 
 	flag.Parse()
 
+	// Try to add the new feed url to the podcast list
+	if len(*new_feed_url) > 0 {
+		match, _ := regexp.MatchString("^htt(p|ps)://", *new_feed_url)
+		if match == true {
+			addError := addUrl(*new_feed_url)
+			if addError != nil {
+				fmt.Fprintf(os.Stderr, "podcasts: %v\n", addError)
+			}
+		}
+	}
+
 	feed_list, feed_path, _ := GetFeedList()
 	feed_data_folder := filepath.Dir(feed_path)
 
