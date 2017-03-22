@@ -10,10 +10,9 @@ import (
 
 func addUrl(feedUrl string) error {
 
-	fmt.Fprintf(os.Stdout, "podcasts: %s\n\n", feedUrl)
-
-	_, err := http.Get(feedUrl)
+	_, err := http.Head(feedUrl)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "podcasts: %v\n\n", err)
 		return err
 	}
 
@@ -25,6 +24,7 @@ func addUrl(feedUrl string) error {
 	if _, err := os.Stat(feedPath); os.IsNotExist(err) {
 		err = writeText(feedUrl, feedPath)
 		if err != nil {
+			fmt.Fprintf(os.Stderr, "podcasts: %v\n\n", err)
 			return err
 		}
 		return nil
@@ -32,6 +32,7 @@ func addUrl(feedUrl string) error {
 
 	err = appendText("\n"+feedUrl, feedPath)
 	if err != nil {
+		fmt.Fprintf(os.Stderr, "podcasts: %v\n\n", err)
 		return err
 	}
 
