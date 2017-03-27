@@ -30,6 +30,7 @@ const (
 	PARAGRAPH_WIDTH = 90
 	PODCAST_HEADER  = "PODCASTS"
 	WIDTH_HEADER    = 120
+	DESCRIPTION_LEN = 300
 	WGET_REGEX      = "wget\\s--no-clobber\\s-O"
 	HTTPS_REGEX     = "^htt(p|ps)://"
 )
@@ -52,10 +53,12 @@ type Channel struct {
 func (c Channel) String() string {
 
 	desc := strings.TrimSpace(StripTags(c.Description))
+	if len(desc) > DESCRIPTION_LEN {
+		desc = desc[:DESCRIPTION_LEN] + " ..."
+	}
 
 	var buf bytes.Buffer
 	doc.ToText(&buf, strings.TrimSpace(desc), "# ", "", PARAGRAPH_WIDTH)
-	//fmt.Println(buf.String())
 
 	return fmt.Sprintf("##\n# %s\n# %s\n%s\n##", c.Title, c.Link, buf.String())
 }
@@ -73,13 +76,16 @@ type Item struct {
 func (i Item) String() string {
 
 	desc := strings.TrimSpace(StripTags(i.Description))
+	if len(desc) > DESCRIPTION_LEN {
+		desc = desc[:DESCRIPTION_LEN] + " ..."
+	}
 
 	var buf bytes.Buffer
 	doc.ToText(&buf, desc, "# ", "", PARAGRAPH_WIDTH)
 
 	desc = buf.String()
 	return fmt.Sprintf("# Title: %s\n# PubDate: %s\n# GUID: %s\n%s", strings.TrimSpace(i.Title),
-		i.PubDate, strings.TrimSpace(i.Guid), strings.TrimSpace(desc))
+		i.PubDate, strings.TrimSpace(i.Guid), desc)
 }
 
 type Enclosure struct {
@@ -284,8 +290,7 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 		return
 	}
 
-	feed_array := []string{"## " + channel.Title, "## URL: " + channel.Link,
-		"## " + channel.LastBuildDate}
+	feed_array := []string{channel.String()}
 	for _, item := range channel.Items {
 
 		parsed, t1_err := ParseTime(item.PubDate)
