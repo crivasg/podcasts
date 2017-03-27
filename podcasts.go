@@ -60,7 +60,7 @@ func (c Channel) String() string {
 	var buf bytes.Buffer
 	doc.ToText(&buf, strings.TrimSpace(desc), "# ", "", PARAGRAPH_WIDTH)
 
-	return fmt.Sprintf("##\n# %s\n# %s\n%s\n##", c.Title, c.Link, buf.String())
+	return fmt.Sprintf("##\n# %s\n# %s\n%s", c.Title, c.Link, buf.String())
 }
 
 type Item struct {
@@ -309,7 +309,7 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 			break
 		}
 
-		feed_array = append(feed_array, "#", item.String(), "#")
+		feed_array = append(feed_array, "#", item.String())
 		for _, encl := range item.Enclosures {
 
 			filename, err := GetFileName(encl.String())
@@ -319,13 +319,12 @@ func podcast_fetch(url string, dirname string, days int, ch chan<- string) {
 			}
 			//fmt.Println("wget -O " + filename + " " + encl.String())
 			//fmt.Println("#")
-			feed_array = append(feed_array, "wget --no-clobber -O "+filename+" "+encl.String(), "#")
+			feed_array = append(feed_array, "wget --no-clobber -O "+filename+" "+encl.String())
 
 		}
 
 	}
-
-	feed_array = append(feed_array, "#\n")
+	feed_array = append(feed_array, "")
 
 	h := sha1.New()
 	h.Write([]byte(url))
