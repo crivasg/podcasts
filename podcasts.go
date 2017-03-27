@@ -30,6 +30,8 @@ const (
 	PARAGRAPH_WIDTH = 90
 	PODCAST_HEADER  = "PODCASTS"
 	WIDTH_HEADER    = 120
+	WGET_REGEX      = "wget\\s--no-clobber\\s-O"
+	HTTPS_REGEX     = "^htt(p|ps)://"
 )
 
 type Rss2 struct {
@@ -158,7 +160,7 @@ func readLines(path string) ([]string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		curr_line := strings.Trim(scanner.Text(), "\t ")
-		match, _ := regexp.MatchString("^htt(p|ps)://", curr_line)
+		match, _ := regexp.MatchString(HTTPS_REGEX, curr_line)
 		if match == true {
 			lines = append(lines, curr_line)
 		}
@@ -405,7 +407,7 @@ func mergeDataOfFiles(folder string, extension string) string {
 				continue
 			}
 
-			match, _ := regexp.MatchString("wget\\s--no-clobber", string(b))
+			match, _ := regexp.MatchString(WGET_REGEX, string(b))
 
 			if match == true {
 				feed_text += string(b) + "\n"
@@ -423,7 +425,7 @@ func main() {
 
 	// Try to add the new feed url to the podcast list
 	if len(*new_feed_url) > 0 {
-		match, _ := regexp.MatchString("^htt(p|ps)://", *new_feed_url)
+		match, _ := regexp.MatchString(HTTPS_REGEX, *new_feed_url)
 		if match == true {
 			addError := addUrl(*new_feed_url)
 			if addError != nil {
